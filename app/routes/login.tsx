@@ -148,7 +148,7 @@ export default function Login() {
                 type='radio'
                 name='loginType'
                 value='register'
-                defaultChecked={actionData?.fields?.loginType === 'login'}
+                defaultChecked={actionData?.fields?.loginType === 'register'}
               />
               &nbsp; Register
             </label>
