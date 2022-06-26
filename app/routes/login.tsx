@@ -1,7 +1,8 @@
 import type { LinksFunction, ActionFunction } from '@remix-run/node';
 import { Link, useSearchParams, useActionData } from '@remix-run/react';
-
+import { login } from '~/utils/session.server';
 import { json } from '@remix-run/node';
+import { createUserSession } from '~/utils/session.server';
 
 import { db } from '~/utils/db.server';
 
@@ -82,12 +83,19 @@ export const action: ActionFunction = async ({ request }) => {
   switch (loginType) {
     case 'login': {
       // login to get the user
+      const user = await login({ username, password });
+      console.log({ user });
+
       // if there's no user, return the fields and formError
+      if (!user) {
+        return badRequest({
+          fields,
+          formError: `Username/Password combination is incorrect`,
+        });
+      }
+      return createUserSession(user.id, redirectTo);
+
       // if there's a user, create their session and redirect to /jokes
-      return badRequest({
-        fields,
-        formError: 'Not implemented',
-      });
     }
     case 'register': {
       const userExists = await db.user.findFirst({
