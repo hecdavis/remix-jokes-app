@@ -1,6 +1,6 @@
 import type { LinksFunction, ActionFunction } from '@remix-run/node';
 import { Link, useSearchParams, useActionData } from '@remix-run/react';
-import { login } from '~/utils/session.server';
+import { login, register } from '~/utils/session.server';
 import { json } from '@remix-run/node';
 import { createUserSession } from '~/utils/session.server';
 
@@ -109,10 +109,14 @@ export const action: ActionFunction = async ({ request }) => {
       }
       // create the user
       // create their session and redirect to /jokes
-      return badRequest({
-        fields,
-        formError: `Not implemented`,
-      });
+      const user = await register({ username, password });
+      if (!user) {
+        return badRequest({
+          fields,
+          formError: `Something went wrong trying to create a new user.`,
+        });
+      }
+      return createUserSession(user.id, redirectTo);
     }
     default: {
       return badRequest({
