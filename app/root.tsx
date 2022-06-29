@@ -1,4 +1,4 @@
-import { LiveReload, Outlet, Links } from '@remix-run/react';
+import { LiveReload, Outlet, Links, useCatch } from '@remix-run/react';
 import type { LinksFunction } from '@remix-run/node';
 
 import globalStylesUrl from '~/styles/global.css';
@@ -21,6 +21,20 @@ export const links: LinksFunction = () => {
     },
   ];
 };
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  return (
+    <Document title={`${caught.status} ${caught.statusText}`}>
+      <div className='error-container'>
+        <h1>
+          {caught.status} {caught.statusText}
+        </h1>
+      </div>
+    </Document>
+  );
+}
 
 function Document({
   children,
