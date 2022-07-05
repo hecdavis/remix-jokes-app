@@ -1,4 +1,11 @@
-import { LiveReload, Outlet, Links, useCatch, Meta } from '@remix-run/react';
+import {
+  LiveReload,
+  Outlet,
+  Links,
+  useCatch,
+  Meta,
+  Scripts,
+} from '@remix-run/react';
 import type { LinksFunction, MetaFunction } from '@remix-run/node';
 
 import globalStylesUrl from '~/styles/global.css';
@@ -67,6 +74,7 @@ function Document({
       </head>
       <body>
         {children}
+        <Scripts />
         <LiveReload />
       </body>
     </html>
@@ -82,6 +90,7 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
   return (
     <Document title='Uh-oh!'>
       <div className='error-container'>
